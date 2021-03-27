@@ -11,5 +11,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Install deps
+        run: npm install
       - name: Lint
         run: npm run lint
