@@ -1,0 +1,31 @@
+{
+  "name": "umamusume-wiki-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FabulousCupcake/umamusume-wiki-scripts.git"
+  },
+  "author": "FabulousCupcake",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FabulousCupcake/umamusume-wiki-scripts/issues"
+  },
+  "homepage": "https://github.com/FabulousCupcake/umamusume-wiki-scripts#readme",
+  "dependencies": {
+    "better-sqlite3": "^7.1.2",
+    "chalk": "^4.1.0",
+    "diff": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1",
+    "wikiapi": "^1.14.1",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0"
+  }
+}
