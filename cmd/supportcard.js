@@ -49,7 +49,8 @@ const updateParameters = (data, originalParams) => {
   params.art                  = noop(params.art);
   params.title                = noop(params.title);
   params.title_jp             = fetchTextData(76).replace("[","").replace("]","");
-  params.rarity               = data.rarity === 1 ? "R" : data.rarity === 2 ? "SR" : data.rarity === 3 ? "SSR" : noop(params.rarity);
+  params.rarity               = [, "R", "SR", "SSR"][data.rarity] || params.rarity || "";
+
   params.type                 = noop(params.type);
   params.series               = noop(params.series);
   params.obtain               = noop(params.obtain);
