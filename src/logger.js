@@ -16,6 +16,12 @@ let ACTUAL_LOG_LEVEL = LOG_LEVEL.INFO;
 // diff prints diff output
 const diff = (before, after) => {
   const d = Diff.diffLines(before, after);
+
+  // No difference, print only if debug level
+  if (d.length === 1) {
+    if (ACTUAL_LOG_LEVEL > LOG_LEVEL.DEBUG) return;
+  }
+
   d.forEach((part) => {
     const color = part.added ? chalk.green :
                   part.removed ? chalk.red : chalk;
