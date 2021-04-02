@@ -194,7 +194,7 @@ const handler = async (argv) => {
 module.exports = {
   handler,
   command: "character <id|all>",
-  aliases: "cb",
+  aliases: "c",
   builder: {
     id: {
       describe: "Specific character id to update",

@@ -3,8 +3,8 @@ const { updateTokenWithParams } = require("../src/wikiapi-utils");
 const logger = require("../src/logger");
 
 // Constants
-const CARGO_TABLE_NAME = "supports";
-const TEMPLATE_NAME = "Support";
+const CARGO_TABLE_NAME = "items";
+const TEMPLATE_NAME = "Item";
 
 // Globals
 let wiki, db;
@@ -43,26 +43,15 @@ const updateParameters = (data, originalParams) => {
   const noop = text => (text) ? text : "";
   const params = {...originalParams};
 
-  params.id                   = data.id;
-  params.chara_id             = data.chara_id;
-  params.icon                 = noop(params.icon);
-  params.art                  = noop(params.art);
-  params.title                = noop(params.title);
-  params.title_jp             = fetchTextData(76).replace("[","").replace("]","");
-  params.rarity               = ["", "R", "SR", "SSR"][data.rarity] || params.rarity || "";
-  params.type                 = noop(params.type);
-  params.series               = noop(params.series);
-  params.obtain               = noop(params.obtain);
-  params.release_date         = noop(params.release_date);
-  params.limited              = noop(params.limited);
-  params.link_gamewith        = noop(params.link_gamewith);
-  params.link_kamigame        = noop(params.link_kamigame);
-  params.unique_bonus         = noop(params.unique_bonus);
-  params.effects              = noop(params.effects);
-  params.skills               = noop(params.skills);
-  params.events               = noop(params.events);
-  params.episode              = noop(params.episode);
-  params.episode_jp           = fetchTextData(88);
+  params.id              = data.id;
+  params.icon            = noop(params.icon);
+  params.name            = noop(params.name);
+  params.name_jp         = fetchTextData(23);
+  params.description     = noop(params.description);
+  params.description_jp  = fetchTextData(24);
+  params.category        = data.item_category;
+  params.uses            = noop(params.uses);
+  params.obtain          = noop(params.obtain);
 
   return params;
 }
@@ -74,7 +63,7 @@ const update = async (data) => {
   const parsed = page.parse();
   const original = parsed.toString();
 
-  // Look for Support template and edit
+  // Look for Item template and edit
   parsed.each("template", token => {
     if (token.name != TEMPLATE_NAME) return;
     const newParams = updateParameters(data, token.parameters);
@@ -95,18 +84,18 @@ const update = async (data) => {
   logger.info("===> … Done!")
 }
 
-// updateOne pulls data of a support card from db and runs update with it
+// updateOne pulls data of a item from db and runs update with it
 const updateOne = async (id) => {
-  logger.info(`==> Synchronizing support card id ${id}…`);
-  const statement = db.prepare(`SELECT * FROM support_card_data WHERE support_card_data.id=${id} LIMIT 1`);
+  logger.info(`==> Synchronizing item id ${id}…`);
+  const statement = db.prepare(`SELECT * FROM item_data WHERE item_data."id"=${id} LIMIT 1`);
   const result = statement.get();
   update(result);
 }
 
-// updateAll pulls all id from support_card_data and runs update with each of them
+// updateAll pulls all id from item_data and runs update with each of them
 const updateAll = async () => {
-  logger.info(`==> Synchronizing all support cards…`);
-  const statement = db.prepare("SELECT * FROM support_card_data");
+  logger.info(`==> Synchronizing all items…`);
+  const statement = db.prepare("SELECT * FROM item_data");
   const results = statement.all();
 
   // Loop through each results
@@ -130,11 +119,11 @@ const handler = async (argv) => {
 // yargs command definition
 module.exports = {
   handler,
-  command: "supportcard <id|all>",
-  aliases: "sc",
+  command: "item <id|all>",
+  aliases: "i",
   builder: {
     id: {
-      describe: "Specific support card id to update",
+      describe: "Specific item id to update",
       type: "string",
     },
   },
