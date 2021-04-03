@@ -6,7 +6,7 @@ const logger = require("../src/logger");
 const CARGO_TABLE_NAME = "characters";
 const TEMPLATE_NAME = "Character";
 const CHARACTER_QUERY = `
-SELECT card_data."id" AS id, card_data."chara_id" AS chara_id, default_rarity,
+SELECT card_data.id AS id, card_data.chara_id AS chara_id, default_rarity,
 talent_speed, talent_stamina, talent_pow, talent_guts, talent_wiz, limited_chara,
 r1.speed AS speed1, r1.stamina AS stamina1, r1.pow AS power1, r1.guts AS guts1, r1.wiz AS wisdom1,
 r2.speed AS speed2, r2.stamina AS stamina2, r2.pow AS power2, r2.guts AS guts2, r2.wiz AS wisdom2,
@@ -124,7 +124,6 @@ const updateParameters = (data, originalParams) => {
   params.awakening3           = noop(params.awakening3);
   params.awakening4           = noop(params.awakening4);
   params.events               = noop(params.events);
-  params.ura_objectives       = noop(params.ura_objectives);
   params.model_file           = noop(params.model_file);
   params.model_texture        = noop(params.model_texture);
 
@@ -162,7 +161,7 @@ const update = async (data) => {
 // updateOne pulls data of a character from db and runs update with it
 const updateOne = async (id) => {
   logger.info(`==> Synchronizing character id ${id}…`);
-  const statement = db.prepare(`${CHARACTER_QUERY} WHERE "card_data"."id" = "${id}" LIMIT 1`);
+  const statement = db.prepare(`${CHARACTER_QUERY} WHERE card_data.id=${id} LIMIT 1`);
   const result = statement.get();
   update(result);
 }

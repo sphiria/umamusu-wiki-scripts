@@ -5,6 +5,10 @@ const logger = require("../src/logger");
 // Constants
 const CARGO_TABLE_NAME = "character_biographies";
 const TEMPLATE_NAME = "CharacterBiography";
+const CHARACTERBIO_QUERY = `
+SELECT chara_data.*, ura_route.race_set_id AS ura_objectives
+FROM chara_data
+LEFT OUTER JOIN single_mode_route AS ura_route ON ura_route.chara_id = chara_data.id AND ura_route.scenario_id = 0`;
 
 // Globals
 let wiki, db;
@@ -92,6 +96,7 @@ const updateParameters = (data, originalParams) => {
   params.ui_speech_color_2    = data.ui_speech_color_2;
   params.ui_nameplate_color_1 = data.ui_nameplate_color_1;
   params.ui_nameplate_color_2 = data.ui_nameplate_color_2;
+  params.ura_objectives       = data.ura_objectives || ""; // Only non-null for playable characters
 
   return params;
 }
@@ -127,7 +132,7 @@ const update = async (data) => {
 // updateOne pulls data of a character from db and runs update with it
 const updateOne = async (id) => {
   logger.info(`==> Synchronizing character id ${id}…`);
-  const statement = db.prepare(`SELECT * FROM chara_data WHERE chara_data.id=${id} LIMIT 1`);
+  const statement = db.prepare(`${CHARACTERBIO_QUERY} WHERE chara_data.id=${id} LIMIT 1`);
   const result = statement.get();
   update(result);
 }
@@ -135,7 +140,7 @@ const updateOne = async (id) => {
 // updateAll pulls all id from card_data and runs update with each of them
 const updateAll = async () => {
   logger.info(`==> Synchronizing all characters…`);
-  const statement = db.prepare("SELECT * FROM chara_data");
+  const statement = db.prepare(CHARACTERBIO_QUERY);
   const results = statement.all();
 
   // Loop through each results

@@ -87,7 +87,7 @@ const update = async (data) => {
 // updateOne pulls data of a item from db and runs update with it
 const updateOne = async (id) => {
   logger.info(`==> Synchronizing item id ${id}…`);
-  const statement = db.prepare(`SELECT * FROM item_data WHERE item_data."id"=${id} LIMIT 1`);
+  const statement = db.prepare(`SELECT * FROM item_data WHERE item_data.id=${id} LIMIT 1`);
   const result = statement.get();
   update(result);
 }

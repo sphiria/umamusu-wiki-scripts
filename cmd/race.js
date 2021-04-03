@@ -16,7 +16,7 @@ const RACE_TRACKS = {
   10008: "Kyoto", // 京都
   10009: "Hanshin", // 阪神
   10010: "Kokura", // 小倉
-  10011: "Ooi", // 大井
+  10101: "Ooi", // 大井
 };
 const RACE_CATEGORIES = {
   1: { // Common(?) races
@@ -61,21 +61,22 @@ const RACE_COURSE = {
   4: "Outer to Inner",
 };
 const RACE_QUERY = `
-SELECT race_instance."id" AS "id", race_instance."race_id" AS "race_id",
+SELECT race_instance.id AS id, race_instance.race_id AS race_id,
 race."group" AS "group", race.grade AS grade, race.course_set AS course_set, race.entry_num,
-course."race_track_id" AS "race_track_id", course.distance AS distance,
+course.race_track_id AS race_track_id, course.distance AS distance,
 course.ground AS terrain, course.inout AS course, course.turn AS direction,
 program.month AS month, program.half AS half, program.need_fan_count AS required_fans,
 program.race_permission AS class, fan_sets.fan_count AS fan_count
 FROM race_instance
-LEFT OUTER JOIN race ON race."id" = race_instance."race_id"
-LEFT OUTER JOIN race_course_set AS course ON course."id" = course_set
-LEFT OUTER JOIN single_mode_program AS program ON program.race_instance_id = race_instance."id"
+LEFT OUTER JOIN race ON race.id = race_instance.race_id
+LEFT OUTER JOIN race_course_set AS course ON course.id = course_set
+LEFT OUTER JOIN single_mode_program AS program ON program.race_instance_id = race_instance."id" AND program.base_program_id = 0
 LEFT OUTER JOIN single_mode_fan_count AS fan_sets ON program.fan_set_id = fan_sets.fan_set_id AND fan_sets."order" = 1`;
 
 // In text_data category 28, all races with instance ID >= 580001 have a ton of name duplicates and represent
 // URA Finals, Maiden Races, Team Stadium Races, Main Story Races, and similar. These will be manually extracted.
-// ID 102501 is a 宝塚記念 Dupe, ID 102601 is a 菊花賞 Dupe, ID 102701 is a 天皇賞（春）Dupe and ID 203501 is a スプリングステークス Dupe
+// ID 102501 is a 宝塚記念 (101201) Dupe, ID 102601 is a 菊花賞 (101501) Dupe,
+// ID 102701 is a 天皇賞（春）(100601) Dupe and ID 203501 is a スプリングステークス (201001) Dupe
 const RACE_BLACKLIST = `
 WHERE race_instance.id < 580001 AND (
 race_instance.id IS NOT 102501 AND
@@ -127,7 +128,6 @@ const updateParameters = (data, originalParams) => {
   params.name          = noop(params.name);
   params.name_jp       = fetchTextData(28);
   params.track         = RACE_TRACKS[data.race_track_id] || ""; // Fetches EN name from ID or empty if EN name is not set
-
   params.track_jp      = fetchTextData(35, data.race_track_id); // From race
   params.grade         = RACE_CATEGORIES[data.group][data.grade]; // From race
   params.trophy        = noop(params.trophy); // Only exists for G3, G2, G1, EX grade
