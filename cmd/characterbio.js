@@ -76,8 +76,6 @@ const updateParameters = (data, originalParams) => {
   params.shoe_size_jp         = fetchTextData(168);
   params.family_detail        = noop(params.family_detail);
   params.family_detail_jp     = fetchTextData(169);
-  params.skin                 = data.skin;
-  params.socks                = data.socks;
   params.team                 = noop(params.team);
   params.image_color_main     = data.image_color_main;
   params.image_color_sub      = data.image_color_sub;
