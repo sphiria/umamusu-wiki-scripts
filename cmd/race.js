@@ -135,11 +135,11 @@ const updateParameters = (data, originalParams) => {
   params.length        = data.distance; // From race_course_set
   params.direction     = RACE_DIRECTION[data.direction]; // From race_course_set
   params.track_course  = RACE_COURSE[data.course]; // From race_course_set: inout
-  params.class         = data.class; // From: single_mode_program: race_permission
-  params.month         = data.month; // From single_mode_program
-  params.month_half    = data.half; // From single_mode_program
-  params.fans          = data.fan_count; // From single_mode_fan_count: fan_set_id (single_mode_program) with order == 1 (order => place)
-  params.required_fans = data.required_fans; // From single_mode_program: need_fan_count
+  params.class         = data.class || ""; // From: single_mode_program: race_permission, may be empty if race is unused
+  params.month         = data.month || ""; // From single_mode_program, may be empty if race is unused
+  params.month_half    = data.half || ""; // From single_mode_program, may be empty if race is unused
+  params.fans          = data.fan_count || ""; // From single_mode_fan_count: fan_set_id (single_mode_program) with order == 1 (order => place), may be empty if race is unused
+  params.required_fans = data.required_fans || ""; // From single_mode_program: need_fan_count, may be empty if race is unused
   params.participants  = data.entry_num;
 
   return params;
