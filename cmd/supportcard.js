@@ -50,7 +50,7 @@ const updateParameters = (data, originalParams) => {
   params.title                = noop(params.title);
   params.title_jp             = fetchTextData(76).replace("[","").replace("]","");
   params.rarity               = ["", "R", "SR", "SSR"][data.rarity] || params.rarity || "";
-  params.type                 = noop(params.type);
+  params.type                 = data.command_id;
   params.series               = noop(params.series);
   params.obtain               = noop(params.obtain);
   params.release_date         = noop(params.release_date);
