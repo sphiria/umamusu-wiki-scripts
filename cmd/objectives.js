@@ -36,38 +36,26 @@ const update = async (data) => {
 // constructDump fetches the table data and structures into a dump
 const constructDump = () => {
   const statement = db.prepare(OBJECTIVE_QUERY);
-  const results = statement.all();
-  const dumpData = [];
+  let results = statement.all();
 
-  for (let i = 0; i < results.length; i++) {
-    let dumpEntry = `	{
-		id = ${results[i].id},
-		race_set_id = ${results[i].race_set_id},
-		target_type = ${results[i].target_type},
-		sort_id = ${results[i].sort_id},
-		turn = ${results[i].turn},
-		race_type = ${results[i].race_type},
-		condition_type = ${results[i].condition_type},
-		condition_id = ${results[i].condition_id},
-		condition_value_1 = ${results[i].condition_value_1},
-		condition_value_2 = ${results[i].condition_value_2},
-		determine_race = ${results[i].determine_race},
-		determine_race_flag = ${results[i].determine_race_flag},
-		race_instance_id = ${results[i].race_instance_id || 0},
-	},`;
+  results = results.map(res => {
+    // Format data to "key = value," (including indentation)
+    let objective = Object.keys(res).map(key => {
+      return key = `		${key} = ${res[key] || 0},`;
+    }).join("\n")
 
+    // Encapsulate entry with brackets to form valid lua table entry
+    return "	{\n" + objective + "\n	},";
+  })
 
-    dumpData.push(dumpEntry);
-  }
-
-  const dumpModule = `local objectives = {
-${dumpData.join("\n")}
+  // Combine whole module content
+  const module = `local objectives = {
+${results.join("\n")}
 }
 
-return objectives
-`;
+return objectives`;
 
-  return dumpModule;
+  return module;
 }
 
 // handler processes the command parameters/flags and starts the update process
