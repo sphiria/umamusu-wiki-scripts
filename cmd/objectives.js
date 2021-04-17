@@ -49,7 +49,9 @@ const constructDump = () => {
   })
 
   // Combine whole module content
-  const module = `local objectives = {
+  const module = `
+local objectives = {
+
 ${results.join("\n")}
 }
 
