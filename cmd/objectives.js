@@ -51,11 +51,12 @@ const constructDump = () => {
   // Combine whole module content
   const module = `
 local objectives = {
-
 ${results.join("\n")}
 }
 
-return objectives`;
+return objectives
+`;
+
 
   return module;
 }
