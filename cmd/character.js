@@ -65,7 +65,10 @@ const updateParameters = (data, originalParams) => {
   params.id                   = data.id;
   params.chara_id             = data.chara_id;
   params.icon                 = noop(params.icon);
-  params.art                  = noop(params.art);
+  params.outfit_unique        = noop(params.outfit_unique);
+  params.outfit_default       = noop(params.outfit_default);
+  params.outfit_school        = noop(params.outfit_school);
+  params.outfit_numbered      = noop(params.outfit_numbered);
   params.title                = noop(params.title);
   params.title_jp             = fetchTextData(5).replace("[","").replace("]","");
   params.base_star            = data.default_rarity;
